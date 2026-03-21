@@ -85,18 +85,29 @@ int searchNamaHewan(DataHewan *ptrArray, int jumlahHewan) {
     string *ptrNama = &cariNama;
     
     cin.ignore();
-    cout << "Masukkan Nama Hewan yang ingin dicari" << endl; 
+    cout << "Masukkan Nama Hewan yang ingin dicari" << endl; // Misal nama yang di cari: Hamster 
     cout << "> "; getline(cin, cariNama); 
     gambarGaris("-", panjangGaris);
 
-    for (int i = 0; i < jumlahHewan; i++) {
-        if (*ptrNama == (ptrArray + i) -> namaHewan) {
-            return i; 
+    for (int i = 0; i < jumlahHewan; i++) { // Perulangan Untuk Mengakses Semua Hewan yanga ada pada Array
+        if (*ptrNama == (ptrArray + i) -> namaHewan) { // Membandingkan apakah nama hewan di array sama dengan nama yang dicari (Hamster)
+            return i; // Jika ya, kembalikan Indeks dari array
         }
-    }
+    } // Ulangi terus hingga semua hewan yang ada pada array diakses
     
-    return -1; 
+    return -1; // Jika tidak ada yang cocok, kembalikan nilai -1 (Artinya tidak ditemukan)
 }
+
+// ILUSTRASI
+// daftarHewan = {"Kucing", "Landak", "Marmut", "Anjing", "Hamster"}
+// Yang dicari = "Hamster"
+
+// ITERASI 1: "Kucing" == "Hamster"? TIDAK (Lanjut iterasi selanjutnya)
+// ITERASI 2: "Landak" == "Hamster"? TIDAK (Lanjut iterasi selanjutnya)
+// ITERASI 3: "Marmut" == "Hamster"? TIDAK (Lanjut iterasi selanjutnya)
+// ITERASI 4: "Anjing" == "Hamster"? TIDAK (Lanjut iterasi selanjutnya)
+// ITERASI 5: "Hamster" == "Hamster"? YA (Kembalikan Indeks Array)
+// Hewan ditemukan pada Indeks ke-5 Array
 
 // NOTE: Search ID Hewan Menggunakan Fibonnaci Search
 int searchIDHewan(DataHewan *ptrArray, int jumlahHewan) {
