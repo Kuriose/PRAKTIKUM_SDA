@@ -283,7 +283,6 @@ void tambahHewan(DataHewan *ptr, int &jumlahHewan) {
 
 void cariHewan(DataHewan daftarHewan[], int &jumlahHewan) {
     int pilihan;
-    string kembali;
     DataHewan *ptrArray = daftarHewan; 
 
     do {
@@ -313,11 +312,9 @@ void cariHewan(DataHewan daftarHewan[], int &jumlahHewan) {
             int indeksHasil = searchNamaHewan(daftarHewan, jumlahHewan); 
             if (indeksHasil < 0) {
                 cout << "=> Hewan tidak Ditemukan" << endl;
-                cout << "=> Saran: Awali Pencarian dengan Menggunakan Huruf Kapital" << endl;
                 gambarGaris("-", panjangGaris);
                 
-                cout << "Tekan 'Enter' untuk Kembali" << endl; 
-                cout << "> "; getline(cin, kembali); 
+                system("pause"); 
                 gambarGaris("-", panjangGaris);
             } 
             else {
@@ -330,8 +327,7 @@ void cariHewan(DataHewan daftarHewan[], int &jumlahHewan) {
                 cout << "Harga Hewan    : " << ptrArray[indeksHasil].hargaHewan << endl;
                 gambarGaris("-", panjangGaris);
 
-                cout << "Tekan 'Enter' untuk Kembali" << endl; 
-                cout << "> "; getline(cin, kembali);
+                system("pause");
                 gambarGaris("-", panjangGaris); 
             }
         }
@@ -344,8 +340,7 @@ void cariHewan(DataHewan daftarHewan[], int &jumlahHewan) {
                 cout << "=> Hewan tidak Ditemukan" << endl;
                 gambarGaris("-", panjangGaris);
 
-                cout << "Tekan 'Enter' untuk Kembali" << endl; 
-                cout << "> "; cin.ignore(); getline(cin, kembali); 
+                system("pause"); 
                 gambarGaris("-", panjangGaris);
             } 
             else {
@@ -358,8 +353,7 @@ void cariHewan(DataHewan daftarHewan[], int &jumlahHewan) {
                 cout << "Harga Hewan    : " << ptrArray[indeksHasil].hargaHewan << endl;
                 gambarGaris("-", panjangGaris);
                 
-                cout << "Tekan 'Enter' untuk Kembali" << endl; 
-                cout << "> "; cin.ignore(); getline(cin, kembali); 
+                system("pause"); 
                 gambarGaris("-", panjangGaris);
             }
         }
@@ -410,8 +404,7 @@ void urutkanHewan(DataHewan daftarHewan[], int &jumlahHewan) {
             gambarTabel(daftarHewan, jumlahHewan); 
             gambarGaris("-", panjangGaris);
 
-            cout << "Tekan 'Enter' untuk Kembali" << endl; 
-            cout << "> "; cin.ignore(); getline(cin, kembali);
+            system("pause");
             gambarGaris("-", panjangGaris);
             break; 
             
@@ -428,8 +421,7 @@ void urutkanHewan(DataHewan daftarHewan[], int &jumlahHewan) {
             gambarTabel(daftarHewan, jumlahHewan);
             gambarGaris("-", panjangGaris);
 
-            cout << "Tekan 'Enter' untuk Kembali" << endl; 
-            cout << "> "; cin.ignore(); getline(cin, kembali);
+            system("pause");
             gambarGaris("-", panjangGaris);
             break;
 
@@ -446,8 +438,7 @@ void urutkanHewan(DataHewan daftarHewan[], int &jumlahHewan) {
             gambarTabel(daftarHewan, jumlahHewan);
             gambarGaris("-", panjangGaris);
 
-            cout << "Tekan 'Enter' untuk Kembali" << endl; 
-            cout << "> "; cin.ignore(); getline(cin, kembali);
+            system("pause");
             gambarGaris("-", panjangGaris);
             break;
 
@@ -460,21 +451,17 @@ void urutkanHewan(DataHewan daftarHewan[], int &jumlahHewan) {
 }
 
 void enqueue() {
-    string kembali;
-
     if (queueRear >= MAXQUEUE) {
         cout << "=> Antrian Penuh! Tidak Dapat Menambah Hewan Lagi" << endl;
         gambarGaris("-", panjangGaris);
-        cout << "Tekan 'Enter' untuk Kembali" << endl;
-        cout << "> "; cin.ignore(); getline(cin, kembali);
+        system("pause");
         return;
     }
 
     if (jumlahHewan == 0) {
         cout << "=> Tidak Ada Hewan Terdaftar di Petshop" << endl;
         gambarGaris("-", panjangGaris);
-        cout << "Tekan 'Enter' untuk Kembali" << endl;
-        cout << "> "; cin.ignore(); getline(cin, kembali);
+        system("pause");
         return;
     }
 
@@ -499,8 +486,7 @@ void enqueue() {
     if (indeks == -1) {
         cout << "=> Hewan dengan ID " << inputID << " Tidak Ditemukan di Daftar Petshop" << endl;
         gambarGaris("-", panjangGaris);
-        cout << "Tekan 'Enter' untuk Kembali" << endl;
-        cout << "> "; cin.ignore(); getline(cin, kembali);
+        system("pause");
         return;
     }
 
@@ -528,13 +514,13 @@ void enqueue() {
     }
 
     gambarGaris("-", panjangGaris);
-    cout << "Tekan 'Enter' untuk Kembali" << endl;
-    cout << "> "; cin.ignore(); getline(cin, kembali);
+    system("pause");
 }
 
 void push(DataHewan hewan) {
     if (stackTop >= MAXSTACK - 1) {
         cout << "=> Peringatan: Stack Riwayat Penuh, Tindakan Tidak Dapat Dicatat" << endl;
+        system("pause");
         return;
     }
 
@@ -545,13 +531,10 @@ void push(DataHewan hewan) {
 }
 
 void dequeue() {
-    string kembali;
-
     if (queueFront == queueRear) {
         cout << "=> Antrian Kosong! Tidak Ada Hewan yang Menunggu" << endl;
         gambarGaris("-", panjangGaris);
-        cout << "Tekan 'Enter' untuk Kembali" << endl;
-        cout << "> "; cin.ignore(); getline(cin, kembali);
+        system("pause");
         return;
     }
 
@@ -567,12 +550,10 @@ void dequeue() {
     push(hewanDipanggil);
 
     gambarGaris("-", panjangGaris);
-    cout << "Tekan 'Enter' untuk Kembali" << endl;
-    cout << "> "; cin.ignore(); getline(cin, kembali);
+    system("pause");
 }
 
 void tampilAntrian() {
-    string kembali;
     cout << "=== ANTRIAN PEMERIKSAAN (Front -> Rear) ==============================" << endl;
 
     if (queueFront == queueRear) {
@@ -592,18 +573,14 @@ void tampilAntrian() {
     }
 
     gambarGaris("-", panjangGaris);
-    cout << "Tekan 'Enter' untuk Kembali" << endl;
-    cout << "> "; cin.ignore(); getline(cin, kembali);
+    system("pause");
 }
 
 void pop() {
-    string kembali;
-
     if (stackTop == -1) {
         cout << "=> Stack Riwayat Kosong! Tidak Ada Tindakan yang Bisa Dibatalkan" << endl;
         gambarGaris("-", panjangGaris);
-        cout << "Tekan 'Enter' untuk Kembali" << endl;
-        cout << "> "; cin.ignore(); getline(cin, kembali);
+        system("pause");
         return;
     }
 
@@ -617,12 +594,10 @@ void pop() {
     gambarGaris("-", panjangGaris);
     cout << "=> Riwayat tindakan untuk '" << hewanDihapus.namaHewan << "' telah dihapus" << endl;
     gambarGaris("-", panjangGaris);
-    cout << "Tekan 'Enter' untuk Kembali" << endl;
-    cout << "> "; cin.ignore(); getline(cin, kembali);
+    system("pause");
 }
 
 void tampilRiwayat() {
-    string kembali;
     cout << "=== RIWAYAT TINDAKAN (Bottom -> Top) =================================" << endl;
 
     if (stackTop == -1) {
@@ -641,8 +616,7 @@ void tampilRiwayat() {
     }
 
     gambarGaris("-", panjangGaris);
-    cout << "Tekan 'Enter' untuk Kembali" << endl;
-    cout << "> "; cin.ignore(); getline(cin, kembali);
+    system("pause");
 }
 
 void peek() {
@@ -671,8 +645,7 @@ void peek() {
     }
 
     gambarGaris("-", panjangGaris);
-    cout << "Tekan 'Enter' untuk Kembali" << endl;
-    cout << "> "; cin.ignore(); getline(cin, kembali);
+    system("pause");
 }
 
 void menuAntrianRiwayat() {
