@@ -1,6 +1,8 @@
 #include <iostream> 
 #include <string>
+#include <cctype>
 #include <tabulate/table.hpp>
+
 using namespace std; 
 using namespace tabulate;
 
@@ -27,18 +29,25 @@ DataHewan riwayatStack[MAXSTACK];
 int stackTop = -1; 
 
 // FEAT: Fungsi & Prosedur Bantuan
+string toLowerCase(string s) {
+    for (int i = 0; i < s.length(); i++) {
+        s[i] = tolower(s[i]);
+    }
+    return s;
+}
+
 void addDummyData() {
     // CONTOH ENTRI HEWAN 
     daftarHewan[0].hewanID      = 1                 ;   daftarHewan[1].hewanID      = 2                 ;  
-    daftarHewan[0].namaHewan    = "Kucing"          ;   daftarHewan[1].namaHewan    = "Landak"          ; 
+    daftarHewan[0].namaHewan    = "kucing"          ;   daftarHewan[1].namaHewan    = "landak"          ; 
     daftarHewan[0].hargaHewan   = 100               ;   daftarHewan[1].hargaHewan   = 150               ;
     
     daftarHewan[2].hewanID      = 3                  ;   daftarHewan[3].hewanID      = 4                   ;  
-    daftarHewan[2].namaHewan    = "Marmut"           ;   daftarHewan[3].namaHewan    = "Anjing"            ; 
+    daftarHewan[2].namaHewan    = "marmut"           ;   daftarHewan[3].namaHewan    = "anjing"            ; 
     daftarHewan[2].hargaHewan   = 1000               ;   daftarHewan[3].hargaHewan   = 200                 ;
     
     daftarHewan[4].hewanID      = 5                 ;
-    daftarHewan[4].namaHewan    = "Hamster"         ; 
+    daftarHewan[4].namaHewan    = "hamster"         ; 
     daftarHewan[4].hargaHewan   = 350               ;
 }
 
@@ -114,6 +123,8 @@ int searchNamaHewan(DataHewan *ptrArray, int jumlahHewan) {
     cout << "> "; getline(cin, cariNama); 
     gambarGaris("-", panjangGaris);
 
+    *ptrNama = toLowerCase(cariNama);
+
     for (int i = 0; i < jumlahHewan; i++) { // Perulangan Untuk Mengakses Semua Hewan yanga ada pada Array
         if (*ptrNama == (ptrArray + i) -> namaHewan) { // Membandingkan apakah nama hewan di array sama dengan nama yang dicari (Hamster)
             return i; // Jika ya, kembalikan Indeks dari array
@@ -137,10 +148,6 @@ int searchNamaHewan(DataHewan *ptrArray, int jumlahHewan) {
 // NOTE: Search ID Hewan Menggunakan Fibonnaci Search
 int searchIDHewan(DataHewan *ptrArray, int jumlahHewan) {
     int pilihan;
-    
-    cout << "=> LANGKAH 1: Mengurutkan Data Hewan Berdasarkan ID Terlebih Dahulu" << endl;
-    sortIDHewan(ptrArray, jumlahHewan); 
-    gambarGaris("-", panjangGaris);
 
     cout << "Masukkan ID Hewan yang Ingin Anda Cari" << endl; 
     cout << "> "; cin >> pilihan; 
@@ -264,7 +271,7 @@ void tambahHewan(DataHewan *ptr, int &jumlahHewan) {
             continue;
         } 
 
-        if (berhasilRegister) {
+        if (berhasilRegister && jumlahHewan <= MAXHEWAN) {
             ptr[jumlahHewan].hewanID = idUniqueHewan + 1; 
             ptr[jumlahHewan].namaHewan = inputNama;
             ptr[jumlahHewan].hargaHewan = inputHarga; 
@@ -333,6 +340,10 @@ void cariHewan(DataHewan daftarHewan[], int &jumlahHewan) {
         }
         else if (pilihan == 2) {
             cout << "=> Mencari Berdasarkan ID Hewan" << endl; 
+            gambarGaris("-", panjangGaris);
+
+            cout << "=> LANGKAH 1: Mengurutkan Data Hewan Berdasarkan ID Terlebih Dahulu" << endl;
+            sortIDHewan(ptrArray, jumlahHewan); 
             gambarGaris("-", panjangGaris);
 
             int indeksHasil = searchIDHewan(daftarHewan, jumlahHewan); 
@@ -604,7 +615,7 @@ void tampilRiwayat() {
         cout << "=> Riwayat Masih Kosong" << endl;
     } 
     else {
-        DataHewan *ptrStack = riwayatStack; // Pointer ke elemen pertama stack
+        DataHewan *ptrStack = riwayatStack; 
         for (int i = 0; i <= stackTop; i++) {
             string label = (i == stackTop) ? " <- TOP (Terbaru)" : "";
             cout << "[" << i + 1 << "] ID: " << (ptrStack + i)->hewanID
@@ -621,7 +632,7 @@ void tampilRiwayat() {
 
 void peek() {
     string kembali;
-    cout << "=== PEEK (Intip Tanpa Mengubah Data) =================================" << endl;
+    cout << "=== LIHAT ANTRIAN TERDEPAN DAN RIWAYAT TERBARU =================================" << endl;
     cout << "[ANTRIAN] Pasien Terdepan:" << endl;
     if (queueFront == queueRear) {
         cout << "  => Antrian Kosong" << endl;
