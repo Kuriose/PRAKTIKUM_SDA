@@ -12,12 +12,22 @@ struct DataHewan {
 };
 
 const int MAXHEWAN = 256;
+const int MAXQUEUE = 10;
+const int MAXSTACK = 10;
 const int panjangGaris = 70; 
 DataHewan daftarHewan[MAXHEWAN];
 int jumlahHewan = 5; 
+int idUniqueHewan = jumlahHewan;
+
+DataHewan antrianQueue[MAXQUEUE];
+int queueFront = 0; 
+int queueRear  = 0; 
+
+DataHewan riwayatStack[MAXSTACK];
+int stackTop = -1; 
 
 // FEAT: Fungsi & Prosedur Bantuan
-void dataAwal() {
+void addDummyData() {
     // CONTOH ENTRI HEWAN 
     daftarHewan[0].hewanID      = 1                 ;   daftarHewan[1].hewanID      = 2                 ;  
     daftarHewan[0].namaHewan    = "Kucing"          ;   daftarHewan[1].namaHewan    = "Landak"          ; 
@@ -212,18 +222,15 @@ void sortHargaHewan(DataHewan *ptrArray, int jumlahHewan) {
 }
 
 void lihatHewan(DataHewan *ptrArray, int jumlahHewan) {
-    string kembali;
     cout << "=== LIHAT SEMUA HEWAN ================================================" << endl;
     gambarTabel(ptrArray, jumlahHewan);
     gambarGaris("-", panjangGaris);
 
-    cin.ignore();
-    cout << "Tekan 'Enter' untuk Kembali" << endl; 
-    cout << "> "; getline(cin, kembali); 
+    system("pause");
 }
 
 void tambahHewan(DataHewan *ptr, int &jumlahHewan) {
-    string inputNama, kembali; 
+    string inputNama;
     int inputHarga;
     bool berhasilRegister;
     
@@ -232,8 +239,7 @@ void tambahHewan(DataHewan *ptr, int &jumlahHewan) {
         if (jumlahHewan >= MAXHEWAN) {
             cout << "=> Data Hewan Sudah Penuh" << endl; 
             gambarGaris("-", panjangGaris);
-            cout << "Tekan 'Enter' untuk Kembali" << endl; 
-            cout << "> "; getline(cin, kembali);
+            system("pause");
             gambarGaris("-", panjangGaris);
             break;
         }
@@ -259,17 +265,16 @@ void tambahHewan(DataHewan *ptr, int &jumlahHewan) {
         } 
 
         if (berhasilRegister) {
-            ptr[jumlahHewan].hewanID = jumlahHewan + 1; 
+            ptr[jumlahHewan].hewanID = idUniqueHewan + 1; 
             ptr[jumlahHewan].namaHewan = inputNama;
             ptr[jumlahHewan].hargaHewan = inputHarga; 
-            jumlahHewan++;
+            jumlahHewan++; idUniqueHewan++;
 
             gambarGaris("-", panjangGaris);
             cout << "=> Berhasil Menambahkan Hewan" << endl; 
             gambarGaris("-", panjangGaris);
             
-            cout << "Tekan 'Enter' untuk Kembali" << endl; 
-            cout << "> "; cin.ignore(); getline(cin, kembali);
+            system("pause");
             gambarGaris("-", panjangGaris);
         } 
 
@@ -454,6 +459,301 @@ void urutkanHewan(DataHewan daftarHewan[], int &jumlahHewan) {
     } while (pilihan != 0);
 }
 
+void enqueue() {
+    string kembali;
+
+    if (queueRear >= MAXQUEUE) {
+        cout << "=> Antrian Penuh! Tidak Dapat Menambah Hewan Lagi" << endl;
+        gambarGaris("-", panjangGaris);
+        cout << "Tekan 'Enter' untuk Kembali" << endl;
+        cout << "> "; cin.ignore(); getline(cin, kembali);
+        return;
+    }
+
+    if (jumlahHewan == 0) {
+        cout << "=> Tidak Ada Hewan Terdaftar di Petshop" << endl;
+        gambarGaris("-", panjangGaris);
+        cout << "Tekan 'Enter' untuk Kembali" << endl;
+        cout << "> "; cin.ignore(); getline(cin, kembali);
+        return;
+    }
+
+    cout << "=== Daftar Hewan yang Tersedia ===================================" << endl;
+    gambarTabel(daftarHewan, jumlahHewan);
+    gambarGaris("-", panjangGaris);
+
+    int inputID;
+    cout << "Masukkan ID Hewan yang Ingin Didaftarkan ke Antrian" << endl;
+    cout << "> "; cin >> inputID;
+    inputID = validasiInput(inputID);
+    gambarGaris("-", panjangGaris);
+
+    int indeks = -1;
+    for (int i = 0; i < jumlahHewan; i++) {
+        if (daftarHewan[i].hewanID == inputID) {
+            indeks = i;
+            break;
+        }
+    }
+
+    if (indeks == -1) {
+        cout << "=> Hewan dengan ID " << inputID << " Tidak Ditemukan di Daftar Petshop" << endl;
+        gambarGaris("-", panjangGaris);
+        cout << "Tekan 'Enter' untuk Kembali" << endl;
+        cout << "> "; cin.ignore(); getline(cin, kembali);
+        return;
+    }
+
+    antrianQueue[queueRear] = daftarHewan[indeks];
+    queueRear++;
+
+    cout << "=> Berhasil! Hewan '" << daftarHewan[indeks].namaHewan
+         << "' (ID: " << inputID << ") Masuk ke Antrian (Posisi ke-" << queueRear - queueFront << ")" << endl;
+    gambarGaris("-", panjangGaris);
+
+    cout << "=== Antrian Saat Ini (Front -> Rear) =================================" << endl;
+    if (queueFront == queueRear) {
+        cout << "=> Antrian Kosong" << endl;
+    } else {
+        int ukuranAntrian = queueRear - queueFront;
+        DataHewan *ptrQueue = antrianQueue + queueFront;
+        for (int i = 0; i < ukuranAntrian; i++) {
+            string label = (i == 0) ? " <- FRONT" : (i == ukuranAntrian - 1) ? " <- REAR" : "";
+            cout << "[" << i + 1 << "] ID: " << (ptrQueue + i)->hewanID
+                 << " | Nama: " << (ptrQueue + i)->namaHewan
+                 << " | Harga: " << (ptrQueue + i)->hargaHewan
+                 << label << endl;
+        }
+        cout << "=> Total Antrian: " << ukuranAntrian << " Hewan" << endl;
+    }
+
+    gambarGaris("-", panjangGaris);
+    cout << "Tekan 'Enter' untuk Kembali" << endl;
+    cout << "> "; cin.ignore(); getline(cin, kembali);
+}
+
+void push(DataHewan hewan) {
+    if (stackTop >= MAXSTACK - 1) {
+        cout << "=> Peringatan: Stack Riwayat Penuh, Tindakan Tidak Dapat Dicatat" << endl;
+        return;
+    }
+
+    stackTop++;
+    riwayatStack[stackTop] = hewan;
+
+    cout << "=> Hewan '" << hewan.namaHewan << "' Selesai Diperiksa & Otomatis Dicatat ke Riwayat" << endl;
+}
+
+void dequeue() {
+    string kembali;
+
+    if (queueFront == queueRear) {
+        cout << "=> Antrian Kosong! Tidak Ada Hewan yang Menunggu" << endl;
+        gambarGaris("-", panjangGaris);
+        cout << "Tekan 'Enter' untuk Kembali" << endl;
+        cout << "> "; cin.ignore(); getline(cin, kembali);
+        return;
+    }
+
+    DataHewan hewanDipanggil = antrianQueue[queueFront];
+    queueFront++;
+
+    cout << "=== Hewan Dipanggil untuk Diperiksa ==================================" << endl;
+    cout << "ID Hewan       : " << hewanDipanggil.hewanID << endl;
+    cout << "Nama Hewan     : " << hewanDipanggil.namaHewan << endl;
+    cout << "Harga Hewan    : " << hewanDipanggil.hargaHewan << endl;
+    gambarGaris("-", panjangGaris);
+
+    push(hewanDipanggil);
+
+    gambarGaris("-", panjangGaris);
+    cout << "Tekan 'Enter' untuk Kembali" << endl;
+    cout << "> "; cin.ignore(); getline(cin, kembali);
+}
+
+void tampilAntrian() {
+    string kembali;
+    cout << "=== ANTRIAN PEMERIKSAAN (Front -> Rear) ==============================" << endl;
+
+    if (queueFront == queueRear) {
+        cout << "=> Antrian Masih Kosong" << endl;
+    } else {
+        int ukuranAntrian = queueRear - queueFront;
+        DataHewan *ptrQueue = antrianQueue + queueFront; // Pointer ke elemen front
+
+        for (int i = 0; i < ukuranAntrian; i++) {
+            string label = (i == 0) ? " <- FRONT" : (i == ukuranAntrian - 1) ? " <- REAR" : "";
+            cout << "[" << i + 1 << "] ID: " << (ptrQueue + i)->hewanID
+                 << " | Nama: " << (ptrQueue + i)->namaHewan
+                 << " | Harga: " << (ptrQueue + i)->hargaHewan
+                 << label << endl;
+        }
+        cout << "=> Total Antrian: " << ukuranAntrian << " Hewan" << endl;
+    }
+
+    gambarGaris("-", panjangGaris);
+    cout << "Tekan 'Enter' untuk Kembali" << endl;
+    cout << "> "; cin.ignore(); getline(cin, kembali);
+}
+
+void pop() {
+    string kembali;
+
+    if (stackTop == -1) {
+        cout << "=> Stack Riwayat Kosong! Tidak Ada Tindakan yang Bisa Dibatalkan" << endl;
+        gambarGaris("-", panjangGaris);
+        cout << "Tekan 'Enter' untuk Kembali" << endl;
+        cout << "> "; cin.ignore(); getline(cin, kembali);
+        return;
+    }
+
+    DataHewan hewanDihapus = riwayatStack[stackTop];
+    stackTop--;
+
+    cout << "=== Tindakan Terakhir Berhasil Dibatalkan ============================" << endl;
+    cout << "ID Hewan       : " << hewanDihapus.hewanID << endl;
+    cout << "Nama Hewan     : " << hewanDihapus.namaHewan << endl;
+    cout << "Harga Hewan    : " << hewanDihapus.hargaHewan << endl;
+    gambarGaris("-", panjangGaris);
+    cout << "=> Riwayat tindakan untuk '" << hewanDihapus.namaHewan << "' telah dihapus" << endl;
+    gambarGaris("-", panjangGaris);
+    cout << "Tekan 'Enter' untuk Kembali" << endl;
+    cout << "> "; cin.ignore(); getline(cin, kembali);
+}
+
+void tampilRiwayat() {
+    string kembali;
+    cout << "=== RIWAYAT TINDAKAN (Bottom -> Top) =================================" << endl;
+
+    if (stackTop == -1) {
+        cout << "=> Riwayat Masih Kosong" << endl;
+    } 
+    else {
+        DataHewan *ptrStack = riwayatStack; // Pointer ke elemen pertama stack
+        for (int i = 0; i <= stackTop; i++) {
+            string label = (i == stackTop) ? " <- TOP (Terbaru)" : "";
+            cout << "[" << i + 1 << "] ID: " << (ptrStack + i)->hewanID
+                 << " | Nama: " << (ptrStack + i)->namaHewan
+                 << " | Harga: " << (ptrStack + i)->hargaHewan
+                 << label << endl;
+        }
+        cout << "=> Total Riwayat: " << stackTop + 1 << " Tindakan" << endl;
+    }
+
+    gambarGaris("-", panjangGaris);
+    cout << "Tekan 'Enter' untuk Kembali" << endl;
+    cout << "> "; cin.ignore(); getline(cin, kembali);
+}
+
+void peek() {
+    string kembali;
+    cout << "=== PEEK (Intip Tanpa Mengubah Data) =================================" << endl;
+    cout << "[ANTRIAN] Pasien Terdepan:" << endl;
+    if (queueFront == queueRear) {
+        cout << "  => Antrian Kosong" << endl;
+    } else {
+        DataHewan *ptrFront = antrianQueue + queueFront;
+        cout << "  ID Hewan    : " << ptrFront->hewanID << endl;
+        cout << "  Nama Hewan  : " << ptrFront->namaHewan << endl;
+        cout << "  Harga Hewan : " << ptrFront->hargaHewan << endl;
+    }
+
+    gambarGaris("-", panjangGaris);
+
+    cout << "[RIWAYAT] Tindakan Terakhir (Top of Stack):" << endl;
+    if (stackTop == -1) {
+        cout << "  => Riwayat Kosong" << endl;
+    } else {
+        DataHewan *ptrTop = riwayatStack + stackTop;
+        cout << "  ID Hewan    : " << ptrTop->hewanID << endl;
+        cout << "  Nama Hewan  : " << ptrTop->namaHewan << endl;
+        cout << "  Harga Hewan : " << ptrTop->hargaHewan << endl;
+    }
+
+    gambarGaris("-", panjangGaris);
+    cout << "Tekan 'Enter' untuk Kembali" << endl;
+    cout << "> "; cin.ignore(); getline(cin, kembali);
+}
+
+void menuAntrianRiwayat() {
+    int pilihan;
+
+    do {
+        cout << "\n=== ANTRIAN & RIWAYAT PEMERIKSAAN ===================================" << endl;
+        cout << "[ANTRIAN -- QUEUE]" << endl;
+        cout << "[1] Daftarkan Hewan ke Antrian" << endl;
+        cout << "[2] Panggil Hewan Terdepan" << endl;
+        gambarGaris("-", panjangGaris);
+
+        cout << "[RIWAYAT -- STACK]" << endl;
+        cout << "[3] Batalkan Tindakan Terakhir" << endl;
+        gambarGaris("-", panjangGaris);
+
+        cout << "[TAMPILKAN ANTRIAN DAN RIWAYAT]" << endl;
+        cout << "[4] Lihat Antrian Terdepan dan Riwayat Terbaru" << endl;
+        cout << "[5] Tampilkan Semua Antrian" << endl;
+        cout << "[6] Tampilkan Semua Riwayat" << endl;
+
+        gambarGaris("-", panjangGaris);
+        cout << "[0] Kembali" << endl;
+        gambarGaris("-", panjangGaris);
+
+        cout << "Masukkan Pilihan Anda" << endl;
+        cout << "> "; cin >> pilihan;
+        gambarGaris("-", panjangGaris);
+
+        pilihan = validasiInput(pilihan);
+
+        switch (pilihan) {
+            case 0:
+            cout << "=> Kembali ke Menu Utama" << endl;
+            gambarGaris("-", panjangGaris);
+            break;
+
+            case 1:
+            cout << "=> Mendaftarkan Hewan ke Antrian" << endl;
+            gambarGaris("-", panjangGaris);
+            enqueue();
+            break;
+
+            case 2:
+            cout << "=> Memanggil Hewan Terdepan dari Antrian" << endl;
+            gambarGaris("-", panjangGaris);
+            dequeue();
+            break;
+
+            case 3:
+            cout << "=> Membatalkan Tindakan Terakhir" << endl;
+            gambarGaris("-", panjangGaris);
+            pop();
+            break;
+
+            case 4:
+            cout << "=> Mengintip Data Tanpa Mengubah" << endl;
+            gambarGaris("-", panjangGaris);
+            peek();
+            break;
+
+            case 5:
+            cout << "=> Menampilkan Semua Antrian" << endl;
+            gambarGaris("-", panjangGaris);
+            tampilAntrian();
+            break;
+
+            case 6:
+            cout << "=> Menampilkan Semua Riwayat" << endl;
+            gambarGaris("-", panjangGaris);
+            tampilRiwayat();
+            break;
+
+            default:
+            cout << "=> Pilihan Tidak Valid" << endl;
+            gambarGaris("-", panjangGaris);
+            break;
+        }
+    } while (pilihan != 0);
+}
+
 void menuUtama() {
     int pilihan;
     do {
@@ -462,6 +762,7 @@ void menuUtama() {
         cout << "[2] Lihat Semua Hewan" << endl; 
         cout << "[3] Cari Hewan" << endl; 
         cout << "[4] Urutkan Hewan" << endl; 
+        cout << "[5] Antrian & Riwayat Pemeriksaan" << endl;  // FITUR BARU
         
         gambarGaris("-", panjangGaris);
         cout << "[0] Keluar" << endl;
@@ -504,6 +805,12 @@ void menuUtama() {
             urutkanHewan(daftarHewan, jumlahHewan);
             break;
 
+            case 5:
+            cout << "=> Mengarahkan ke Menu 'Antrian & Riwayat Pemeriksaan'" << endl;
+            gambarGaris("-", panjangGaris);
+            menuAntrianRiwayat();
+            break;
+
             default: 
             cout << "=> Pilihan Tidak Valid" << endl; 
             gambarGaris("-", panjangGaris);
@@ -514,7 +821,7 @@ void menuUtama() {
 }
 
 int main () {
-    dataAwal();
+    addDummyData();
     menuUtama();
     return 0;
-} 
+}
