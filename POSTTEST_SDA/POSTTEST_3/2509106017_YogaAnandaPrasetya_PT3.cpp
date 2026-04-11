@@ -17,6 +17,21 @@ DataHewan daftarHewan[MAXHEWAN];
 int jumlahHewan = 5; 
 
 // FEAT: Fungsi & Prosedur Bantuan
+void dataAwal() {
+    // CONTOH ENTRI HEWAN 
+    daftarHewan[0].hewanID      = 1                 ;   daftarHewan[1].hewanID      = 2                 ;  
+    daftarHewan[0].namaHewan    = "Kucing"          ;   daftarHewan[1].namaHewan    = "Landak"          ; 
+    daftarHewan[0].hargaHewan   = 100               ;   daftarHewan[1].hargaHewan   = 150               ;
+    
+    daftarHewan[2].hewanID      = 3                  ;   daftarHewan[3].hewanID      = 4                   ;  
+    daftarHewan[2].namaHewan    = "Marmut"           ;   daftarHewan[3].namaHewan    = "Anjing"            ; 
+    daftarHewan[2].hargaHewan   = 1000               ;   daftarHewan[3].hargaHewan   = 200                 ;
+    
+    daftarHewan[4].hewanID      = 5                 ;
+    daftarHewan[4].namaHewan    = "Hamster"         ; 
+    daftarHewan[4].hargaHewan   = 350               ;
+}
+
 void gambarTabel(DataHewan *ptrTabel, int jumlahHewan) {
     Table tabelHewan; 
     tabelHewan.add_row({
@@ -439,20 +454,7 @@ void urutkanHewan(DataHewan daftarHewan[], int &jumlahHewan) {
     } while (pilihan != 0);
 }
 
-int main () {
-    // CONTOH ENTRI HEWAN 
-    daftarHewan[0].hewanID      = 1                 ;   daftarHewan[1].hewanID      = 2                 ;  
-    daftarHewan[0].namaHewan    = "Kucing"          ;   daftarHewan[1].namaHewan    = "Landak"          ; 
-    daftarHewan[0].hargaHewan   = 100               ;   daftarHewan[1].hargaHewan   = 150               ;
-    
-    daftarHewan[2].hewanID      = 3                  ;   daftarHewan[3].hewanID      = 4                   ;  
-    daftarHewan[2].namaHewan    = "Marmut"           ;   daftarHewan[3].namaHewan    = "Anjing"            ; 
-    daftarHewan[2].hargaHewan   = 1000               ;   daftarHewan[3].hargaHewan   = 200                 ;
-    
-    daftarHewan[4].hewanID      = 5                 ;
-    daftarHewan[4].namaHewan    = "Hamster"         ; 
-    daftarHewan[4].hargaHewan   = 350               ;
-
+void menuUtama() {
     int pilihan;
     do {
         cout << "\n=== MANAJEMEN PETSHOP ================================================" << endl;
@@ -507,7 +509,12 @@ int main () {
             gambarGaris("-", panjangGaris);
             break;
         }
-        
+    
     } while (pilihan != 0);
+}
+
+int main () {
+    dataAwal();
+    menuUtama();
     return 0;
 } 
