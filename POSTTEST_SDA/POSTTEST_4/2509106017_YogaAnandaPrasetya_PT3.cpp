@@ -39,6 +39,7 @@ int queueSize         = 0;
 NodeStack* stackTop = nullptr;
 int stackSize       = 0;
  
+// Deklarasi Prototype Fungsi agar urutannya enak diliat
 void enqueue();
 void dequeue();
 void push(DataHewan hewan);
@@ -247,6 +248,7 @@ void tambahHewan(DataHewan *ptr, int &jumlahHewan) {
         } 
  
         if (berhasilRegister && jumlahHewan <= MAXHEWAN) {
+            inputNama = toLowerCase(inputNama);
             ptr[jumlahHewan].hewanID    = idUniqueHewan + 1; 
             ptr[jumlahHewan].namaHewan  = inputNama;
             ptr[jumlahHewan].hargaHewan = inputHarga;
@@ -431,6 +433,7 @@ void cetakNodeQueue(NodeQueue* node) {
  
 // ENQUEUE: Tambah node baru di belakang (rear) linked list
 void enqueue() {
+    // Cek Underflow
     if (jumlahHewan == 0) {
         cout << "=> Tidak Ada Hewan Terdaftar di Petshop" << endl;
         gambarGaris("-", panjangGaris);
@@ -448,7 +451,7 @@ void enqueue() {
     inputID = validasiInput(inputID);
     gambarGaris("-", panjangGaris);
  
-    // CEK INDEKS ADA ATAU TIDAK
+    // Cek Indeks Ada Atau Tidak
     int indeks = -1;
     for (int i = 0; i < jumlahHewan; i++) {
         if (daftarHewan[i].hewanID == inputID) {
@@ -457,7 +460,6 @@ void enqueue() {
         }
     }
     
-    // DIJALANKAN JIKA ID TIDAK VALID
     if (indeks == -1) {
         cout << "=> Hewan dengan ID " << inputID << " Tidak Ditemukan di Daftar Petshop" << endl;
         gambarGaris("-", panjangGaris);
@@ -465,22 +467,21 @@ void enqueue() {
         return;
     }
  
-    // Buat node baru -- ADD LAST
+    // Buat node baru 
     NodeQueue *nodeBaru = new NodeQueue;
-    nodeBaru -> data = daftarHewan[indeks]; // Data pada Node Baru = Data Hewan Yang dipilih lewat Indeks
-    nodeBaru -> next = nullptr; // Pointer dijadikan NULL karena Node ditambhkan di Akhir Linked List
+    nodeBaru -> data = daftarHewan[indeks]; 
+    nodeBaru -> next = nullptr; 
  
     // Sisipkan di belakang (rear)
     if (queueRear == nullptr) {
-        // Queue kosong: front dan rear menunjuk node yang sama
         queueFront = nodeBaru;
         queueRear  = nodeBaru;
     } else {
         // Sambungkan node lama rear ke node baru, geser rear
-        queueRear -> next = nodeBaru; // Sambung Node Lama dengan Node Baru
-        queueRear = nodeBaru; // Geser Rear ke nodeBaru
+        queueRear -> next = nodeBaru; 
+        queueRear = nodeBaru; 
     }
-    queueSize++; // Tambah Size queue
+    queueSize++; 
  
     cout << "=> Berhasil! Hewan '" << daftarHewan[indeks].namaHewan
          << "' (ID: " << inputID << ") Masuk ke Antrian (Posisi ke-" << queueSize << ")" << endl;
@@ -539,9 +540,9 @@ void push(DataHewan hewan) {
     // Buat node baru
     NodeStack* nodeBaru = new NodeStack;
     nodeBaru->data      = hewan;
-    nodeBaru->next      = stackTop; // Node baru menunjuk ke top lama
+    nodeBaru->next      = stackTop; 
  
-    stackTop = nodeBaru;            // Top sekarang adalah node baru
+    stackTop = nodeBaru; 
     stackSize++;
  
     cout << "=> Hewan '" << hewan.namaHewan << "' Selesai Diperiksa & Otomatis Dicatat ke Riwayat" << endl;
@@ -549,7 +550,7 @@ void push(DataHewan hewan) {
  
 // POP: Hapus node paling atas (top) dari linked list
 void pop() {
-    // Underflow check
+    // Cek Underflow 
     if (stackTop == nullptr) {
         cout << "=> Stack Riwayat Kosong! Tidak Ada Tindakan yang Bisa Dibatalkan" << endl;
         gambarGaris("-", panjangGaris);
@@ -560,7 +561,7 @@ void pop() {
     NodeStack* nodeHapus   = stackTop;
     DataHewan  hewanDihapus = nodeHapus->data;
  
-    stackTop = stackTop->next;      // Geser top ke node di bawahnya
+    stackTop = stackTop->next;
     delete nodeHapus;
     stackSize--;
  
